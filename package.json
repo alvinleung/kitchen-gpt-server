@@ -6,12 +6,15 @@
   "exports": "./dist/index.js",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --watch './**/*.ts' --exec 'node --experimental-specifier-resolution=node --loader ts-node/esm' src/index.ts"
+    "dev": "nodemon -I --watch './**/*.ts' --exec 'node --experimental-specifier-resolution=node --loader ts-node/esm' src/index.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@keyv/redis": "^2.5.5",
+    "chatgpt": "^5.0.4",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "inquirer": "^9.1.4"
   },
