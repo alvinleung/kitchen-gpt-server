@@ -59,8 +59,13 @@ export async function createChatSession({ apiKey }: ChatSessionConfig) {
     return await promptChatGPT(MessageRole.USER, prompt);
   };
 
+  const clearMessages = async () => {
+    messages.clear();
+    await startConversation();
+  };
+
   return {
     send,
-    clearMessages: messages.clear,
+    clearMessages,
   };
 }
