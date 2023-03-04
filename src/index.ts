@@ -4,39 +4,47 @@ import inquirer from "inquirer";
 import * as dotenv from "dotenv";
 import Keyv from "keyv";
 import { oraPromise } from "ora";
-
-// const app = express();
-// const port = 10000;
-
-// app.get("/", (req: Request, res: Response) => {
-//   res.json({ greeting: "Hello world!" });
-// });
-
-// app.listen(port, () => {
-//   console.log(`🚀 server started at http://localhost:${port}`);
-// });
+import { createChatSession } from "./chatapi/ChatSession";
 
 //https://chat.openai.com/api/auth/session
 dotenv.config();
 
-// const api = new ChatGPTUnofficialProxyAPI({
-//   accessToken: process.env.OPENAI_ACCESS_TOKEN as string,
-// });
+interface PromptMessage {
+  content: string;
+}
 
-const messageStore = new Keyv();
-const api = new ChatGPTAPI({
-  apiKey: process.env.OPENAI_API_KEY as string,
-  messageStore,
-});
+const CHAT_MODE = true;
 
-(async () => {
-  while (true) {
-    const { prompt } = await inquirer.prompt([
-      { type: "input", name: "prompt", message: "ask gpt:" },
-    ]);
-    const res = await oraPromise(api.sendMessage(prompt), {
-      text: prompt,
-    });
-    console.log("\n" + res.text + "\n");
-  }
-})();
+async function main() {
+  const chatSession = await createChatSession({
+    apiKey: process.env.OPENAI_API_KEY as string,
+  });
+
+  const app = express();
+  const port = 1234;
+
+  app.use(express.json());
+  app.post("/prompt", async (req: Request, res: Response) => {
+    const message = req.body as PromptMessage;
+    console.log("message received");
+    console.log(message);
+    const chatGPTResponse = await oraPromise(chatSession.send(message.content));
+    console.log("\n" + chatGPTResponse + "\n");
+    res.json({ content: chatGPTResponse });
+  });
+
+  app.listen(port, () => {
+    console.log(`🚀 server started at http://localhost:${port}`);
+  });
+
+  // server side interface
+  // while (true) {
+  //   const { prompt } = await inquirer.prompt([
+  //     { type: "input", name: "prompt", message: "ask gpt:" },
+  //   ]);
+  //   const chatResponse = await oraPromise(chatSession.send(prompt));
+  //   console.log("\n" + chatResponse + "\n");
+  // }
+}
+
+main();
