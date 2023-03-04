@@ -33,6 +33,10 @@ async function main() {
     res.json({ content: chatGPTResponse });
   });
 
+  app.post("/reset", () => {
+    chatSession.clearMessages();
+  });
+
   app.listen(port, () => {
     console.log(`🚀 server started at http://localhost:${port}`);
   });

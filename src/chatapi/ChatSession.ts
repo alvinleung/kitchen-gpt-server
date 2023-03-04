@@ -61,5 +61,6 @@ export async function createChatSession({ apiKey }: ChatSessionConfig) {
 
   return {
     send,
+    clearMessages: messages.clear,
   };
 }
