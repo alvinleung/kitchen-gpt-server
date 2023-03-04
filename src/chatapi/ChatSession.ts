@@ -45,6 +45,9 @@ export async function createChatSession({ apiKey }: ChatSessionConfig) {
     }
 
     messages.add(MessageRole.ASSISTANT, messageContent);
+
+    console.log(messages.getRecentMessages());
+
     return messageContent;
   };
 
